@@ -21,3 +21,15 @@ A = active
 C = completed
 H = hold
 X = canceled
+
+## Versioning the API
+The most straight forward thing and what we are doing in this course is to add a version parameter to the URL.
+`http://tickets-please.test/api/v1/tickets`
+
+But also look at Modular Laravel by Mateus Guimarães on Laracasts.
+
+Using apiResource instead of resource in the routes file will omit unnecessary routes such as create and edit which
+would show forms in a web application. Thanks Laravel :-)
+
+Starting to go off track a little here because I'm using Laravel 11 and the course is on version 10.
+The new api_v1 routes file is loaded in bootstrap/app in the 'then' property
