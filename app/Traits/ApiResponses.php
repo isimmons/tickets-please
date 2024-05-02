@@ -7,22 +7,28 @@ use Illuminate\Http\JsonResponse;
 trait ApiResponses {
 
     /**
-     * Calls the successResponse method with message and 200 status code
+     * Returns a successful JsonResponse with message and 200 status code
      * @param String $message
+     * @param array $data
+     * @param Int $statusCode
      * @return JsonResponse
      */
-    protected function ok(String $message): JsonResponse
+    protected function successResponse(String $message, array $data, Int $statusCode = 200): JsonResponse
     {
-        return $this->successResponse($message, 200);
+        return response()->json([
+            'data' => $data,
+            'message' => $message,
+            'status' => $statusCode
+        ], $statusCode);
     }
 
     /**
-     * Returns a successful JsonResponse with message and 200 status code
+     * Returns an error JsonResponse with message and status code
      * @param String $message
      * @param Int $statusCode
      * @return JsonResponse
      */
-    protected function successResponse(String $message, Int $statusCode = 200): JsonResponse
+    protected function errorResponse(String $message, Int $statusCode): JsonResponse
     {
         return response()->json([
             'message' => $message,
