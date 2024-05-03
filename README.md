@@ -60,3 +60,18 @@ give all abilities and expire the token after a month. This will be changed. Exp
 There is also a app wide config setting in config/sanctum.php that is set to null by default. you can enter
 a numeric value (minutes) here and it will override any tokens expires_at field in the database.
 [token expiration docs](https://laravel.com/docs/11.x/sanctum#token-expiration)
+
+## Designing Response Payloads
+In order to adhere to the [JSON API Specification](https://jsonapi.org/), we can create a resource and 
+build out our structure there. See resources/V1/TicketResource
+In Postman I have set the Accept header to `application/vnd.api+json` which is required for JSON:API as the
+media type.
+The Laravel resource automatically wraps our data in the data wrapper so we don't have to worry about
+including that in the returned array.
+
+I'm not sure yet if it is correct but to get rid of squigglies (property accessed via magic method) from the IDE
+we can add @property doc comments to the resource class.
+
+Resources are great for both api and web responses because they give us a place to include/omit properties
+from the response data. User data is a good example of where you don't want to provide any data other than what
+is needed to the front end (for security and data privacy)
