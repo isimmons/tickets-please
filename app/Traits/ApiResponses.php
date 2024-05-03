@@ -13,7 +13,7 @@ trait ApiResponses {
      * @param Int $statusCode
      * @return JsonResponse
      */
-    protected function successResponse(String $message, array $data, Int $statusCode = 200): JsonResponse
+    protected function successResponse(String $message, array $data = [], Int $statusCode = 200): JsonResponse
     {
         return response()->json([
             'data' => $data,
