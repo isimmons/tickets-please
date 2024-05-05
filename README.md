@@ -75,3 +75,32 @@ we can add @property doc comments to the resource class.
 Resources are great for both api and web responses because they give us a place to include/omit properties
 from the response data. User data is a good example of where you don't want to provide any data other than what
 is needed to the front end (for security and data privacy)
+
+## Optional Parameters to Load Optional Data
+The client (meaning the developer using our API) may not want certain optional data because it 
+increases the size of the payload. When developing apps to use our API it is important to keep
+things like this in mind. Designing and developing an API requires a change in the mindset in
+this way. Our end user, client, customer is a developer, not the average home user.
+
+With that said, the TicketResource was using the 'includes' property to include user data along
+with ticket data. This needs to be opt-in because the developer may not want to include user
+information in some scenarios.
+
+See ApiController. This could have been a trait or a base controller.
+It can easily be switched over to a trait if that becomes a better way. 
+One might argue that we don't want all of our controllers having access 
+to the include() method for no reason.
+
+So the method is now available to TicketController and the TicketResource
+conditionally returns 'includes' only if the user is loaded, via the
+Laravel provided method whenLoaded().
+
+Next we optionally load user tickets for the user endpoint. As is, it is
+also loading the relationship with every ticket which is the user data. 
+Since we already have the user data we need to think about how best to
+exclude this extra data when loading tickets with the user. Leaving it 
+as is for now.
+
+One more thing we did is to add/modify the 'links' properties in both
+TicketResource and UserResource to be consistent with the way Laravel
+presents pagination links.
