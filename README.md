@@ -112,3 +112,21 @@ However, since we are getting a query string parameter I feel the more
 appropriate method is request()->query('include'). This method does
 not cause squigglies in the IDE either. So I changed it to use query
 in the ApiController.
+
+## Filters for Query Parameters
+For the first filter, 'status' I added strtoupper in the filter because we used upper case
+in the database. This way the user can type 'c' or 'C' for the status. Too much flexibility
+in an API could cause complexity or even break things but I think this is simple enough to
+allow it. 
+
+Next we setup filters for title, dates, date ranges, and multiple status.
+Example here is tickets including the author with status C or X with a title
+that has 'foo' in it and a createdAt date within the supplied range.
+`http://localhost:8000/api/v1/tickets?include=author&filter[status]=C,X&filter[title]=*foo*&filter[createdAt]=2024-03-04,2024-05-03`
+
+Side Note about dates, sqlite, and Jetbrains IDEs:
+They will screw up the date and break your application if you do not set
+your source driver up correctly for sqlite. 
+date_class = TEXT
+date_string_format = yyyy-MM-dd HH:mm:ss
+[see jb issue here](https://intellij-support.jetbrains.com/hc/en-us/community/posts/115000338470-Default-date-format)
