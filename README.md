@@ -104,3 +104,7 @@ as is for now.
 One more thing we did is to add/modify the 'links' properties in both
 TicketResource and UserResource to be consistent with the way Laravel
 presents pagination links.
+
+Note: request()->get() in ApiController throws exception if the key isn't
+found. Need to handle. Plus no need to checking isset on the key if
+it throws an exception. Look into this.
