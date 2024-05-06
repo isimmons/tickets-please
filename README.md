@@ -105,6 +105,10 @@ One more thing we did is to add/modify the 'links' properties in both
 TicketResource and UserResource to be consistent with the way Laravel
 presents pagination links.
 
-Note: request()->get() in ApiController throws exception if the key isn't
-found. Need to handle. Plus no need to checking isset on the key if
-it throws an exception. Look into this.
+Note: request()->get() causes IDE squigglies stating that there are
+unhandled exceptions thrown. But it does not throw an exception if the 
+query parameter 'include' is missing so it might be an IDE problem. 
+However, since we are getting a query string parameter I feel the more
+appropriate method is request()->query('include'). This method does
+not cause squigglies in the IDE either. So I changed it to use query
+in the ApiController.

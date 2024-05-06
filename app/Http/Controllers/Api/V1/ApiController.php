@@ -9,13 +9,9 @@ use Psr\Container\NotFoundExceptionInterface;
 
 class ApiController extends Controller
 {
-    /**
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
     public function include(string $relationship): bool
     {
-        $param = request()->get('include');
+        $param = request()->query('include');
 
         if(!isset($param)) {
             return false;
