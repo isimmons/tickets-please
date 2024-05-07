@@ -3,6 +3,12 @@ Tickets Please is the project for Jeremy McPeak's "Laravel API Master Class" on 
 
 Tickets Please is a support ticket tracking and resolution backend API upon which developers can build their apps.
 
+## Testing
+Testing is not part of this course but I want to add it later. For a starting point on Pest and JSON:API
+endpoint testing [look here](https://laravel-news.com/testing-json-api-endpoints-with-pestphp)
+That is assuming you are familiar with Pest. I just need to see the difference between testing application
+endpoints and testing JSON:API endpoints and I think I can get it figured out from there.
+
 ## Designing the URL
 The base url is http://tickets-please.test/api because this is in development.
 Ideally it will be something like https://ticketsplease.com/api in production
