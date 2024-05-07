@@ -3,6 +3,18 @@ Tickets Please is the project for Jeremy McPeak's "Laravel API Master Class" on 
 
 Tickets Please is a support ticket tracking and resolution backend API upon which developers can build their apps.
 
+# BIG TODO
+I think this project will be a perfect opportunity to gain knowledge and practice in several other areas.
+So here is the big todo plan after finishing the course.
+1. Complete rewrite of these notes so it makes more sense to others. Not docs but lesson notes
+2. Write actual Docs for the API
+3. Add tests
+4. Refactor, add change logs, update docs
+5. Regarding #4, breaking changes are new versions, non breaking as minor versions, how to properly release
+    major versions vs minor versions and document upgrade paths for major versions.
+
+4 and 5 scare me a little.
+
 ## Testing
 Testing is not part of this course but I want to add it later. For a starting point on Pest and JSON:API
 endpoint testing [look here](https://laravel-news.com/testing-json-api-endpoints-with-pestphp)
@@ -154,3 +166,29 @@ Now we will set up sorting such as
 `http://tickets-please.test/api/v1/tickets?sort=title,status`
 Defaults to ASC or prefixed with '-' for DEC
 `http://tickets-please.test/api/v1/tickets?sort=-title,-status`
+
+## Creating Resources with Post Requests
+Remember we are using the sanctum middleware on our routes. This means in the authorise method of our request
+classes we can simply return true. In other applications this would be where we make sure the user is logged
+in but in this case they can't get past the route without being logged in first.
+
+This is also where we would check roles at a later point to determine if a logged in user is able to make
+a specific request but for now, any logged in user can perform any of our POST requests.
+
+Validation notes:
+Under the hood, Laravel uses PHP methods so this is not necessarily a fault of Laravel but in order to 
+cover ALL edge cases for the id (non negative, non zero, non decimal, integer type, non boolean) we have to combine
+a few rules. I think it's integer that allows true/false and numeric that allows decimal? Google it though.
+It's true. Also waiting to see where we go with this but I think we need to check the id exists in the db
+unless the act of creating a ticket triggers, creating an account or something. Not sure why it's being left 
+out as a validation rule. Will revisit.
+`'data.relationships.author.data.id' => ['required', 'integer', 'numeric', 'min:1'],`
+Comments in the lesson suggest using the validation check for exists and changes will come in future lessons
+but for now, we have complete control over the returned response by checking it in the controller in a
+try/catch.
+We are returning a 200 response as a sort of security through obscurity because attackers tend to use
+automated tools that search for error statuses. It is debatable whether to do this or not. Another thing
+to consider, research, and revisit. Also look at AuthController where we used error instead of success message.
+
+We make it possible to create a new ticket both from the TicketController and from the AuthorTicketController.
+Remember this when documenting the API. 2 ways to create tickets.
