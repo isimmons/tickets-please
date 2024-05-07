@@ -128,7 +128,7 @@ allow it.
 Next we setup filters for title, dates, date ranges, and multiple status.
 Example here is tickets including the author with status C or X with a title
 that has 'foo' in it and a createdAt date within the supplied range.
-`http://localhost:8000/api/v1/tickets?include=author&filter[status]=C,X&filter[title]=*foo*&filter[createdAt]=2024-03-04,2024-05-03`
+`http://tickets-please.test/api/v1/tickets?include=author&filter[status]=C,X&filter[title]=*foo*&filter[createdAt]=2024-03-04,2024-05-03`
 
 Side Note about dates, sqlite, and Jetbrains IDEs:
 They will screw up the date and break your application if you do not set
@@ -136,3 +136,10 @@ your source driver up correctly for sqlite.
 date_class = TEXT
 date_string_format = yyyy-MM-dd HH:mm:ss
 [see jb issue here](https://intellij-support.jetbrains.com/hc/en-us/community/posts/115000338470-Default-date-format)
+
+## Filtering Nested Resources
+First commit for this section we changed a few things to make the distinction between users and authors.
+
+Next we create a nested controller AuthorTicketsController to handle getting tickets belonging to a particular
+author `http://tickets-please.test/api/v1/authors/1/tickets`
+And we can still use our filters for the tickets.
