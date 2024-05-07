@@ -143,3 +143,14 @@ First commit for this section we changed a few things to make the distinction be
 Next we create a nested controller AuthorTicketsController to handle getting tickets belonging to a particular
 author `http://tickets-please.test/api/v1/authors/1/tickets`
 And we can still use our filters for the tickets.
+
+## Sorting Data
+First we get the User model and Author controller up to date on filtering.
+`http://tickets-please.test/api/v1/authors?filter[id]=1,5,11` to filter authors by id
+Of course the original url for a single author `authors/id` still works. This just gives us a way to get
+multiple authors by id.
+
+Now we will set up sorting such as
+`http://tickets-please.test/api/v1/tickets?sort=title,status`
+Defaults to ASC or prefixed with '-' for DEC
+`http://tickets-please.test/api/v1/tickets?sort=-title,-status`

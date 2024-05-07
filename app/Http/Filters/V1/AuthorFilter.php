@@ -4,11 +4,12 @@ namespace App\Http\Filters\V1;
 
 use Illuminate\Database\Eloquent\Builder;
 
-class TicketFilter extends QueryFilter
+class AuthorFilter extends QueryFilter
 {
     protected array $sortable = [
-        'title',
-        'status',
+        'id',
+        'name',
+        'email',
         'createdAt' => 'created_at',
         'updatedAt' => 'updated_at',
     ];
@@ -40,15 +41,22 @@ class TicketFilter extends QueryFilter
         return $this->builder->with($value);
     }
 
-    public function status($value): Builder
+    public function id($value): Builder
     {
-        return $this->builder->whereIn('status', explode(',', strtoupper($value)));
+        return $this->builder->whereIn('id', explode(',', $value));
     }
 
-    public function title($value): Builder
+    public function name($value): Builder
     {
         $likeStr = str_replace('*', '%', $value);
 
-        return $this->builder->where('title', 'LIKE', $likeStr);
+        return $this->builder->where('name', 'LIKE', $likeStr);
+    }
+
+    public function email($value): Builder
+    {
+        $likeStr = str_replace('*', '%', $value);
+
+        return $this->builder->where('email', 'LIKE', $likeStr);
     }
 }
