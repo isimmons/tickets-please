@@ -9,6 +9,7 @@ use App\Traits\ApiResponses;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Permissions\V1\Abilities;
 
 class AuthController extends Controller
 {
@@ -32,7 +33,7 @@ class AuthController extends Controller
         return $this->successResponse( 'Authenticated', [
             'token' => $user->createToken(
                 'API token for' . $user->email,
-                ['*'],
+                Abilities::getAbilities($user),
                 now()->addMonth()
             )->plainTextToken,
         ]);

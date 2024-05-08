@@ -32,13 +32,15 @@ class TicketController extends ApiController
     {
         try {
             User::findOrFail($request->input('data.relationships.author.data.id'));
+
+            $this->isAble('store', null);
+
+            return new TicketResource(Ticket::create($request->mappedAttributes()));
         } catch (ModelNotFoundException $exception) {
             return $this->successResponse('User not found', [
                 'error' => 'The Provided user id does not exist.'
             ]);
         }
-
-        return new TicketResource(Ticket::create($request->mappedAttributes()));
     }
 
     /**
@@ -83,9 +85,10 @@ class TicketController extends ApiController
 
     public function replace(ReplaceTicketRequest $request, $ticket_id)
     {
-        // TODO: ACCESS users can reassign tickets to other users with this
         try {
             $ticket = Ticket::findOrFail($ticket_id);
+
+            $this->isAble('replace', $ticket);
 
             $ticket->update($request->mappedAttributes());
 
@@ -103,6 +106,9 @@ class TicketController extends ApiController
     {
         try {
             $ticket = Ticket::findOrFail($ticket_id);
+
+            $this->isAble('delete', $ticket);
+
             $ticket->delete();
 
             return $this->successResponse('Ticket deleted');

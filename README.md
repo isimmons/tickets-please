@@ -256,3 +256,15 @@ However, I found that I can register multiple policies to the same model and use
 the one used at runtime. See AppServiceProvider and the isAble method where i set the correct policy to use
 based on the $this->policyClass property in the controller. This allows me to have V1/TicketPolicy
 and V2/TicketPolicy
+
+## Controlling Access with Token Abilities
+See new Permissions/V1/Abilities and how it is used in TiketPolicy and how it is included in the token
+as Abilities::getAbilities($user) in AuthController.
+
+Again we partially versioned something. I'll need to look into the best way to have a V2 Permissions. Though
+we may not need a V2 for permissions. But since we did version it, we need to have a way to dynamically
+include the correct version in the AuthController. Maybe it is as simple as versioning AuthController but the 
+more we version, the more it seems we might as well just create a new project called Tickets Please 2.0
+
+Anyway, I renamed the ticket constants like UpdateTicket to UpdateAnyTicket to make it clear and consistent
+with UpdateOwnTicket

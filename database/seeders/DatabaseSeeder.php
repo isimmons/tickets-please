@@ -21,6 +21,12 @@ class DatabaseSeeder extends Seeder
             'email' => 'test@example.com',
         ]);
 
+        $manager = User::factory()->create([
+            'name' => 'Spongebob',
+            'email' => 'manager@example.com',
+            'is_admin' => true,
+        ]);
+
         Ticket::factory(100)
             ->recycle($users)
             ->create();
