@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Filters\V1\TicketFilter;
+use App\Http\Requests\Api\V1\ReplaceTicketRequest;
 use App\Http\Requests\Api\V1\StoreTicketRequest;
 use App\Http\Resources\V1\TicketResource;
 use App\Models\Ticket;
@@ -32,6 +33,34 @@ class AuthorTicketsController extends ApiController
         ];
 
         return new TicketResource(Ticket::create($model));
+    }
+
+    public function replace(ReplaceTicketRequest $request, $author_id, $ticket_id)
+    {
+        // TODO: ACCESS users can reassign tickets to other users with this
+
+        try {
+            $ticket = Ticket::findOrFail($ticket_id);
+
+            if($ticket->user_id == $author_id){
+                $model = [
+                    'title' => $request->input('data.attributes.title'),
+                    'description' => $request->input('data.attributes.description'),
+                    'status' => $request->input('data.attributes.status'),
+                    'user_id' => $request->input('data.relationships.author.data.id'),
+                ];
+
+                $ticket->update($model);
+
+                return new TicketResource($ticket);
+            }
+
+            // TODO: ticket doesnt belong to user return message?
+
+
+        } catch (ModelNotFoundException $exception) {
+            return $this->errorResponse('Ticket not found', 404);
+        }
     }
 
     /**

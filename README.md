@@ -201,3 +201,18 @@ We provide the ability to delete a ticket in both the TicketController and the A
 See @Bionik6 APIExceptions class in [lesson comments](https://laracasts.com/series/laravel-api-master-class/episodes/14)
 I'm sure I'll be looking into this change which will change how and where I use try/catch blocks
 in the controllers.
+
+## Replace a Resource with PUT
+My first question is always "why would I want to replace it?"
+
+To distinguish between PATCH/PUT requests we create an actual replace() method instead of running them
+both through the update method.
+
+Replacing the created_at/updated_at fields is something to consider. But in this case we are not.
+Had to reverse how to show the description field in TicketResource because it wasn't showing for the replace method.
+Now we only stop it from showing on the 2 routes where we don't want it to show.
+`!$request->routeIs(['tickets.index', 'authors.tickets.index']),`
+
+# TODO Security
+roles, policies, etc. At the moment any user can make all of their tickets belong to other users
+Several access control lessons coming up soon.

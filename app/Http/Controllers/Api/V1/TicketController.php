@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Http\Requests\Api\V1\ReplaceTicketRequest;
 use App\Http\Requests\Api\V1\StoreTicketRequest;
 use App\Http\Requests\Api\V1\UpdateTicketRequest;
 use App\Http\Resources\V1\TicketResource;
@@ -19,7 +20,6 @@ class TicketController extends ApiController
     {
         return TicketResource::collection(Ticket::filter($filters)->paginate());
     }
-
 
 
     /**
@@ -64,13 +64,34 @@ class TicketController extends ApiController
     }
 
 
-
     /**
      * Update the specified resource in storage.
      */
     public function update(UpdateTicketRequest $request, Ticket $ticket)
     {
         //
+    }
+
+    public function replace(ReplaceTicketRequest $request, $ticket_id)
+    {
+        // TODO: ACCESS users can reassign tickets to other users with this
+        try {
+            $ticket = Ticket::findOrFail($ticket_id);
+
+            $model = [
+                'title' => $request->input('data.attributes.title'),
+                'description' => $request->input('data.attributes.description'),
+                'status' => $request->input('data.attributes.status'),
+                'user_id' => $request->input('data.relationships.author.data.id'),
+            ];
+
+            $ticket->update($model);
+
+            return new TicketResource($ticket);
+
+        } catch (ModelNotFoundException $exception) {
+            return $this->errorResponse('Ticket not found', 404);
+        }
     }
 
     /**
