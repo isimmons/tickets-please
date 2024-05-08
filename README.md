@@ -257,6 +257,9 @@ the one used at runtime. See AppServiceProvider and the isAble method where i se
 based on the $this->policyClass property in the controller. This allows me to have V1/TicketPolicy
 and V2/TicketPolicy
 
+Update: There is another way by @Coni in the lesson discussion where we can set the policy to use in the
+constructor of ApiController
+
 ## Controlling Access with Token Abilities
 See new Permissions/V1/Abilities and how it is used in TiketPolicy and how it is included in the token
 as Abilities::getAbilities($user) in AuthController.
