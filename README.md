@@ -192,3 +192,12 @@ to consider, research, and revisit. Also look at AuthController where we used er
 
 We make it possible to create a new ticket both from the TicketController and from the AuthorTicketController.
 Remember this when documenting the API. 2 ways to create tickets.
+
+## Deleting with a Delete Request
+In the case of tickets we go ahead and return a 404 error since this is the expected behavior in a typical
+system. We aren't trying to hide any implementation details from hackers here.
+
+We provide the ability to delete a ticket in both the TicketController and the AuthorTicketController
+See @Bionik6 APIExceptions class in [lesson comments](https://laracasts.com/series/laravel-api-master-class/episodes/14)
+I'm sure I'll be looking into this change which will change how and where I use try/catch blocks
+in the controllers.
