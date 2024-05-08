@@ -216,3 +216,9 @@ Now we only stop it from showing on the 2 routes where we don't want it to show.
 # TODO Security
 roles, policies, etc. At the moment any user can make all of their tickets belong to other users
 Several access control lessons coming up soon.
+
+## Update Resources with a Patch Request
+We implemented the ability to use a PATCH request to update tickets.
+We also cleaned up by creating a BaseTicketRequest with the mappedAttributes method. In this way we not only
+cleaned up those arrays of attributes in the controllers but also provided a way to do both PUT and PATCH
+requests with a one-liner and determine which attributes are in the request.

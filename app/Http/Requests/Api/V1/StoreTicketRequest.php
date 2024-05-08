@@ -3,13 +3,8 @@
 namespace App\Http\Requests\Api\V1;
 
 use Illuminate\Contracts\Validation\ValidationRule;
-use Illuminate\Foundation\Http\FormRequest;
 
-use Illuminate\Validation\Rule;
-
-use function strtoupper;
-
-class StoreTicketRequest extends FormRequest
+class StoreTicketRequest extends BaseTicketRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -37,12 +32,5 @@ class StoreTicketRequest extends FormRequest
         }
 
         return $rules;
-    }
-
-    public function messages(): array
-    {
-        return [
-            'data.attributes.status' => 'data.attributes.status must be capital A,C,H, or X.',
-        ];
     }
 }

@@ -3,13 +3,8 @@
 namespace App\Http\Requests\Api\V1;
 
 use Illuminate\Contracts\Validation\ValidationRule;
-use Illuminate\Foundation\Http\FormRequest;
 
-use Illuminate\Validation\Rule;
-
-use function strtoupper;
-
-class ReplaceTicketRequest extends FormRequest
+class ReplaceTicketRequest extends BaseTicketRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,20 +21,11 @@ class ReplaceTicketRequest extends FormRequest
      */
     public function rules(): array
     {
-        $rules = [
+        return [
             'data.attributes.title' => ['required', 'string'],
             'data.attributes.description' => ['required', 'string'],
             'data.attributes.status' => ['required', 'string', 'in:A,C,H,X'],
             'data.relationships.author.data.id' => ['required', 'integer', 'numeric', 'min:1'],
-        ];
-
-        return $rules;
-    }
-
-    public function messages(): array
-    {
-        return [
-            'data.attributes.status' => 'data.attributes.status must be capital A,C,H, or X.',
         ];
     }
 }
