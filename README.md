@@ -222,3 +222,37 @@ We implemented the ability to use a PATCH request to update tickets.
 We also cleaned up by creating a BaseTicketRequest with the mappedAttributes method. In this way we not only
 cleaned up those arrays of attributes in the controllers but also provided a way to do both PUT and PATCH
 requests with a one-liner and determine which attributes are in the request.
+
+## Using Policies for User Authorization
+Been waiting for this. Up to this point our users can do too much. Just to list a few issues,
+A user should not be able to update/replace another users ticket
+A user should not be able to delete another users ticket
+A user should not be able to change their own ticket to another users id
+A user may need to have rules about when they can delete their own tickets
+A user may also need to have rules about which fields they can update in their own tickets.
+Maybe admin or ticket-master (silly job title) should be the only one able to delete or update
+It all depends on business needs but as an API builder who does not know the clients needs, I have to
+try to think in a different way than I would if I were building the front end. Hmmm... some thought is required.
+
+There are a lot of different authorizations to consider and write and they would make the controller
+really messy if we put them in there. So we will use policies.
+
+Laravel 11 policies will be automatically registered, providing they follow convention
+Models/Ticket.php will need TicketPolicy.php. Also the policy must be in the app/Policies directory.
+
+One issue is making sure our model and the authorize method knows which version TicketPolicy to use.
+We fix that with the isAble custom method in the base ApiController class and our protected $policyClass
+in the TicketController.
+
+Laravel 11 authorize method is no longer available on the controller. There are a couple of ways to handle 
+it. For now I'll go with Gate facade in ApiController. `Gate::authorize()`
+
+authorize is also available on an authenticated user object so request->user->authorize should work. Need to test.
+
+I ran into issues trying to use a versioned policy. In Laravel 11 the array of arguments passed to authorize as 
+the second arg is simply args that go to the policy method. They have no effect on which policy is used. This
+is determined by the policy that is bound to the model when registered in AppServiceProvider.
+However, I found that I can register multiple policies to the same model and use Gate::policy to set
+the one used at runtime. See AppServiceProvider and the isAble method where i set the correct policy to use
+based on the $this->policyClass property in the controller. This allows me to have V1/TicketPolicy
+and V2/TicketPolicy
