@@ -7,7 +7,6 @@ use App\Traits\ApiResponses;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\Gate;
 
-
 class ApiController extends Controller
 {
     use ApiResponses;

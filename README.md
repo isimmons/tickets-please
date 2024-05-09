@@ -339,3 +339,19 @@ Same situation in UpdateTicketRequest.
 We refactor the isAble method and move the try/catch into it so we can clean up TicketController.
 Not sure what this has to do with security and Principle of Least Privilege but it's a good refactor.
 Will do the same for all controllers.
+
+## Handling Errors
+By defining exception handlers and then utilizing route model binding and making some changes to json response
+errors we were able to make errors consistent in their responses to the client. This also gives us the ability
+to keep tight control over what information gets returned to the client which is a plus for security/privacy.
+
+There were a few differences from the course because of Laravel 11.
+Exceptions handlers/renderers are defined in bootstrap/app.php
+I started out by defining all of them there. Then I moved them out to an ApiException class. I made everything static
+so the code in app.php could be cleaner.
+
+All controllers are updated to use route model binding which will throw the NotFoundHttpException
+when a ModelNotFoundException is encountered. So I type hinted both exceptions in a single handleNotFoundException
+handler.
+
+We also added the notAuthorized method to the ApiResponses trait in order to use it in the controllers

@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class AuthorTicketsController extends ApiController
 {
-    protected $policyClass = TicketPolicy::class;
+    protected string $policyClass = TicketPolicy::class;
     public function index($author_id, TicketFilter $filters)
     {
         return TicketResource::collection(

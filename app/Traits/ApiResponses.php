@@ -24,15 +24,30 @@ trait ApiResponses {
 
     /**
      * Returns an error JsonResponse with message and status code
-     * @param String $message
-     * @param Int $statusCode
+     * @param array|string $errors
+     * @param Int|null $statusCode
      * @return JsonResponse
      */
-    protected function errorResponse(String $message, Int $statusCode): JsonResponse
+    protected function errorResponse(array|string $errors = [], Int $statusCode = null): JsonResponse
     {
+        if(is_string($errors)) {
+            return response()->json([
+                'message' => $errors,
+                'status' => $statusCode
+            ], $statusCode);
+        }
+
         return response()->json([
+            'errors' => $errors,
+        ]);
+    }
+
+    protected function notAuthorized(String $message = 'Not Authorized'): JsonResponse
+    {
+        return $this->errorResponse([
             'message' => $message,
-            'status' => $statusCode
-        ], $statusCode);
+            'status' => 403,
+            'source' => ''
+        ]);
     }
 }
