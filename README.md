@@ -271,3 +271,14 @@ more we version, the more it seems we might as well just create a new project ca
 
 Anyway, I renamed the ticket constants like UpdateTicket to UpdateAnyTicket to make it clear and consistent
 with UpdateOwnTicket
+
+## Applying Granular Permissions
+Good for demo but not sure that I like how we use the ability in UpdateTicketRequest.
+It is not very clear. I think I need to go through later and consider renaming the constants.
+Also I'm thinking abilities can be to not be able NotDoThis and then can be used as negatives if it
+makes it more clear in certain situations. Can I have the ability to no be able to do something ?
+
+Noteworthy, we made changes in the UpdateUserRequest and StoreUserRequest that called for some changes in 
+TicketController. 
+The way I have done policy versioning in ApiController, required me to put in a ternary check for cases
+where there is no ticket to pass but we pass Ticket::class. If it's already a fqn I don't need to get the fqn

@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\Api\V1;
 
+use App\Permissions\V1\Abilities;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Validation\Rule;
 
 class StoreTicketRequest extends BaseTicketRequest
 {
@@ -25,10 +27,17 @@ class StoreTicketRequest extends BaseTicketRequest
             'data.attributes.title' => ['required', 'string'],
             'data.attributes.description' => ['required', 'string'],
             'data.attributes.status' => ['required', 'string', 'in:A,C,H,X'],
+            'data.relationships.author.data.id' => ['sometimes', 'integer', 'numeric', 'min:1', 'exists:users,id'],
         ];
 
+        $user = $this->user();
+
         if($this->routeIs('tickets.store')) {
-            $rules['data.relationships.author.data.id'] = ['required', 'integer', 'numeric', 'min:1'];
+            if( $user->tokenCan(Abilities::CreateOwnTicket) ) {
+                $rules['data.relationships.author.data.id'][] = Rule::in(
+                    [$user->id]
+                );
+            }
         }
 
         return $rules;
