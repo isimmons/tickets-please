@@ -4,16 +4,15 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Traits\ApiResponses;
-use Illuminate\Http\Request;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\Gate;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
+
 
 class ApiController extends Controller
 {
     use ApiResponses;
 
-    protected $policyClass;
+    protected string $policyClass;
     public function include(string $relationship): bool
     {
         $param = request()->query('include');
@@ -30,6 +29,11 @@ class ApiController extends Controller
     public function isAble($ability, $targetModel)
     {
         $gate = Gate::policy(is_string($targetModel) ? $targetModel : $targetModel::class, $this->policyClass);
-        return $gate->authorize($ability, [$targetModel]);
+        try {
+            $gate->authorize($ability, [$targetModel]);
+            return true;
+        } catch (AuthorizationException $e) {
+            return false;
+        }
     }
 }

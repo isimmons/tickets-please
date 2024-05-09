@@ -23,15 +23,16 @@ class UpdateTicketRequest extends BaseTicketRequest
      */
     public function rules(): array
     {
+        $authorIdRule = ['sometimes', 'integer', 'numeric', 'min:1', 'exists:users,id'];
         $rules = [
             'data.attributes.title' => ['sometimes', 'string'],
             'data.attributes.description' => ['sometimes', 'string'],
             'data.attributes.status' => ['sometimes', 'string', 'in:A,C,H,X'],
-            'data.relationships.author.data.id' => ['sometimes', 'integer', 'numeric', 'min:1', 'exists:users,id'],
+            'data.relationships.author.data.id' => ['prohibited'],
         ];
 
-        if ($this->user()->tokenCan(Abilities::UpdateOwnTicket)) {
-            $rules['data.relationships.author.data.id'] = 'prohibited';
+        if ($this->user()->tokenCan(Abilities::UpdateAnyTicket)) {
+            $rules['data.relationships.author.data.id'] = $authorIdRule;
         }
 
         return $rules;

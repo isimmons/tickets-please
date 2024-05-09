@@ -24,20 +24,20 @@ class StoreTicketRequest extends BaseTicketRequest
     public function rules(): array
     {
         $authorIdAttr = $this->routeIs('tickets.store') ? 'data.relationships.author.data.id' : 'author';
+        $user = $this->user();
+        $authorIdRule = ['required', 'integer', 'numeric', 'min:1', 'exists:users,id'];
 
         $rules = [
             'data.attributes.title' => ['required', 'string'],
             'data.attributes.description' => ['required', 'string'],
             'data.attributes.status' => ['required', 'string', 'in:A,C,H,X'],
-            $authorIdAttr => ['sometimes', 'integer', 'numeric', 'min:1', 'exists:users,id'],
+            $authorIdAttr => [...$authorIdRule, Rule::in([$user->id])],
         ];
 
         $user = $this->user();
 
-        if( $user->tokenCan(Abilities::CreateOwnTicket) ) {
-            $rules[$authorIdAttr][] = Rule::in(
-                [$user->id]
-            );
+        if( $user->tokenCan(Abilities::CreateTicket) ) {
+            $rules[$authorIdAttr] = $authorIdRule;
         }
 
         return $rules;

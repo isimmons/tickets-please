@@ -326,3 +326,16 @@ in ApiController in the isAble method. So I may not need to register them in the
 Will test and update.
 
 Dont think we should be telling the world which users are admins when listing all users. Will fix
+
+## The Principle of Least Privilege
+Regardless of who the user is in a system, assign them the most restrictive permissions possible.
+As they need more authority, grant only that authority, always maintaining the least privilege or 
+most restrictive permissions possible.
+
+In StoreTicketRequest we make the default rule the most restrictive. Then for admin/manager users
+who have the CreateTicket ability, we modify the rule.
+Same situation in UpdateTicketRequest.
+
+We refactor the isAble method and move the try/catch into it so we can clean up TicketController.
+Not sure what this has to do with security and Principle of Least Privilege but it's a good refactor.
+Will do the same for all controllers.
