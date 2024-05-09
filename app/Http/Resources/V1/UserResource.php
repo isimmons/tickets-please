@@ -9,6 +9,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property String $id
  * @property String $name
  * @property String $email
+ * @property boolean $is_admin
  * @property mixed $email_verified_at
  * @property mixed $created_at
  * @property mixed $updated_at
@@ -28,6 +29,7 @@ class UserResource extends JsonResource
             'attributes' => [
                 'name' => $this->name,
                 'email' => $this->email,
+                'isAdmin' => $this->is_admin,
                 $this->mergeWhen($request->routeIs('authors.*'), [
                   'emailVerifiedAt' => $this->email_verified_at,
                   'createdAt' => $this->created_at,

@@ -10,17 +10,17 @@ use Illuminate\Validation\Rule;
 
 use function strtoupper;
 
-class BaseTicketRequest extends FormRequest
+class BaseUserRequest extends FormRequest
 {
     public function mappedAttributes(array $additionalAttributes = []): array
     {
         $attributeMap = array_merge([
-            'data.attributes.title' => 'title',
-            'data.attributes.description' => 'description',
-            'data.attributes.status' => 'status',
+            'data.attributes.name' => 'name',
+            'data.attributes.email' => 'email',
+            'data.attributes.isAdmin' => 'is_admin',
+            'data.attributes.password' => 'password',
             'data.attributes.createdAt' => 'created_at',
             'data.attributes.updatedAt' => 'updated_at',
-            'data.relationships.author.data.id' => 'user_id'
         ], $additionalAttributes);
 
         if (!$this->user()->tokenCan(Abilities::UpdateOwnTicket))
@@ -29,16 +29,16 @@ class BaseTicketRequest extends FormRequest
 
         foreach ($attributeMap as $key => $attribute) {
             if($this->has($key)) {
-                $attributesToUpdate[$attribute] = $this->input($key);
+                $value = $this->input($key);
+
+                if ($attribute === 'password') {
+                    $value = bcrypt($value);
+                }
+
+                $attributesToUpdate[$attribute] = $value;
             }
         }
 
         return $attributesToUpdate;
-    }
-    public function messages(): array
-    {
-        return [
-            'data.attributes.status' => 'data.attributes.status must be capital A,C,H, or X.',
-        ];
     }
 }

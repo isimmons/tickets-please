@@ -261,7 +261,7 @@ Update: There is another way by @Coni in the lesson discussion where we can set 
 constructor of ApiController
 
 ## Controlling Access with Token Abilities
-See new Permissions/V1/Abilities and how it is used in TiketPolicy and how it is included in the token
+See new Permissions/V1/Abilities and how it is used in TicketPolicy and how it is included in the token
 as Abilities::getAbilities($user) in AuthController.
 
 Again we partially versioned something. I'll need to look into the best way to have a V2 Permissions. Though
@@ -282,3 +282,47 @@ Noteworthy, we made changes in the UpdateUserRequest and StoreUserRequest that c
 TicketController. 
 The way I have done policy versioning in ApiController, required me to put in a ternary check for cases
 where there is no ticket to pass but we pass Ticket::class. If it's already a fqn I don't need to get the fqn
+
+## Implementing the AuthorTicketsController
+The functionality is basically the same as TicketController, with a few small differences.
+The author id is included in the request url so we already have that. So we don't need to include it
+in the actual request.
+
+StoreTicketRequest: We don't actually need to check the route for tickets.create but we do need to merge
+the author id into the request so we use prepareForValidation
+
+We have to update our mappedAttributes to accept a passed in user_id as 'author'
+using array_merge we add the author id but also have the ability if we wanted to, to override
+existing attributes.
+
+We did some refactoring of how the ticket was retrieved from the database in order to clean up and 
+get rid of the conditional checks against the user_id.
+
+After the refactor, when we try to update from AuthorTickets and use an incorrect user id, it never gets
+past the db query because we get a ModelNotFoundException instead of using our policy which would throw
+a AuthorizationException. So the client gets the message 'not found' instead of 'unauthorized' which is fine
+because a ticket with that id for that user id was not found. Just might not be as helpful when you know
+the ticket does exist? It just doesn't belong to the user.
+
+Side Note: Need to go through app and determine which errors need 401 vs 403
+Also look at merging Update and Replace request and the corresponding messages. Methods described above
+and in the different lesson discussions in Laravel 11 would allow me to clean up a lot and completely
+get rid of the isAble method in favor of Laravel authorize method if I get rid of the replace
+method and revert back to an apiResource route for all controller methods.
+
+## Managing Users
+For starters, the authors controller is returning all users. Who says all users are authors?
+So we change to using a select and join to get the users who have created tickets.
+
+Lot going on. Look back at the commit, update notes later.
+User controller, requests, resources all are a bunch of copy/paste/modify from Tickets
+Added UserFilter even though for now it is identical to AuthorFilter. Ya never know. Well actually, might
+make some changes because there is a difference between users and authors regarding having published tickets.
+
+Changed the authors route because authors won't be creating, updating, or deleting authors.
+
+Registered the policy inside AppServiceProvider but it has occurred to me that is what I am doing
+in ApiController in the isAble method. So I may not need to register them in the service provider at all.
+Will test and update.
+
+Dont think we should be telling the world which users are admins when listing all users. Will fix
