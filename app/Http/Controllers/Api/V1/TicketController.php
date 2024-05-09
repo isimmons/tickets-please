@@ -40,6 +40,8 @@ class TicketController extends ApiController
             return $this->successResponse('User not found', [
                 'error' => 'The Provided user id does not exist.'
             ]);
+        } catch (AuthorizationException $exception) {
+            return $this->errorResponse('You are not authorized to create a ticket', 403);
         }
     }
 
@@ -96,6 +98,8 @@ class TicketController extends ApiController
 
         } catch (ModelNotFoundException $exception) {
             return $this->errorResponse('Ticket not found', 404);
+        } catch (AuthorizationException $exception) {
+            return $this->errorResponse('You are not authorized to replace that resource', 403);
         }
     }
 
@@ -114,6 +118,8 @@ class TicketController extends ApiController
             return $this->successResponse('Ticket deleted');
         } catch (ModelNotFoundException $exception) {
             return $this->errorResponse('Ticket not found', 404);
+        } catch (AuthorizationException $exception) {
+            return $this->errorResponse('You are not authorized to delete that resource', 403);
         }
     }
 }
