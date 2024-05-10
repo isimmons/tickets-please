@@ -2,12 +2,6 @@
 
 namespace App\Providers;
 
-use App\Models\Ticket;
-use App\Models\User;
-use App\Policies\V1\TicketPolicy;
-use App\Policies\V1\UserPolicy;
-use App\Policies\V2\TicketPolicy as V2TicketPolicy;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider

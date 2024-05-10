@@ -24,6 +24,7 @@ $iterator = Finder::create()
 
 return new Doctum($iterator, [
     'title' => 'Tickets Please',
+
 //    'versions' => $versions,
     'build_dir' => __DIR__.'/build/docs',
     'cache_dir' => __DIR__.'/cache/docs',
