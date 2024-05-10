@@ -5,6 +5,11 @@
 
     RewriteEngine On
 
+    # Passthrough for requests to /docs/v1
+    # RewriteRule ^(docs/v1)($|/) - [L]
+
+
+
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
