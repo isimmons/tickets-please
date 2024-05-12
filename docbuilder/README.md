@@ -25,3 +25,16 @@ Route::get('/docs', function () {
 });
 ```
 This is the basics. Should be good to visit `http://tickets-please.test/docs`
+
+I had an issue where the missing trailing slash on the url causes Doctums relative urls to try to
+load from '/' instead of '/docs/'
+
+Several attempts at rewrite rules caused redirect loops. I came up with the solution App\Http\Middleware\FixDocsUrls
+registered as a global middleware in bootstrap/app.php.
+
+[relative laracasts discussion](https://laracasts.com/discuss/channels/servers/how-does-laravelcom-add-a-trailing-slash-to-the-api-docs-link)
+
+[relative doctum discussion](https://github.com/code-lts/doctum/discussions/69)
+
+I was trying to fix the issue with a custom theme with no luck but I'm not sure yet that I can't use it so I'm leaving the themes dir here
+in docbuilder/doctum even though with the current solution, it is not needed.

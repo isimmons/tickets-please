@@ -23,6 +23,7 @@ $iterator = Finder::create()
 //    ->add('master', 'Laravel Dev');
 
 return new Doctum($iterator, [
+//    'theme' => 'my-theme',
     'title' => 'Tickets Please',
 
 //    'versions' => $versions,
@@ -31,5 +32,6 @@ return new Doctum($iterator, [
     'source_dir' => __DIR__."/../../app",
     'default_opened_level' => 2,
 //    'remote_repository' => new GitHubRemoteRepository('laravel/framework', dirname($dir)),
+//    'template_dirs' => [__DIR__ . '/themes/my-theme'],
     'base_url' => 'https://tickets-please.test/api/v1',
 ]);
