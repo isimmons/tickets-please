@@ -16,7 +16,8 @@ class AuthController extends Controller
     use ApiResponses;
 
     /**
-     * Authenticate a registered user
+     * Authenticates a registered user and returns the user's API token.
+     *
      * @param LoginUserRequest $request
      * @return JsonResponse
      */
@@ -39,6 +40,12 @@ class AuthController extends Controller
         ]);
     }
 
+    /**
+     * Signs out the user and destroys the user's API token.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function logout(Request $request): JsonResponse
     {
         $request->user()->currentAccessToken()->delete();

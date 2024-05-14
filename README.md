@@ -355,3 +355,53 @@ when a ModelNotFoundException is encountered. So I type hinted both exceptions i
 handler.
 
 We also added the notAuthorized method to the ApiResponses trait in order to use it in the controllers
+
+# Documenting Your API with Scribe
+I'm testing out [code-lts/doctum](https://github.com/code-lts/doctum) instead.
+[Laravel.com](https://laravel.com/api/11.x/) uses Doctum to generate the API docs for the framework. Then they
+manually create the detailed docs with code samples as markdown files.
+You can see how by reading through the source code at [laravel/docs](https://github.com/laravel/docs) and
+[laravel/laravel.com](https://github.com/laravel/laravel.com)
+
+See the docbuilder/doctum dir in this repo and the README.md located there to see how I've done it in this project.
+
+Unfortunately from what we learned about Scribe in this lesson and from what I am seeing with doctum and looking
+at the docs for [phpDocumentor](https://www.phpdoc.org/) it looks like everyone just does their own thing
+instead of following a standard for php docBlocks. Some things are used by one solution and ignored by another.
+And all of them have IMHO terrible documentation. It's like something I wrote :-)
+
+I like the way Laravel does it because it separates the API from guides, code samples, etc. Also doctum docs are 
+prettier to me and don't need any styling updates (clean and simple API docs). And using markdown files for the
+rest will give me complete freedom for explanations, code examples, notes, caveats, or anything I can think of
+without trying to figure out how to make it show up in a docblock or adding/modifying my source code for it.
+And it gives me complete freedom for styling the display of the markdown docs.
+
+You can see in this commit where I've left out some scribe specific annotations and added in others that work for
+doctum. github flavor code blocks work for both Doctum and phpDocumentor(according to docs) but I haven't
+tested and don't see it anywhere in the documentation for Scribe.
+
+Notice in TicketController for the index method I use the code block because doctum ignores @queryParam. Also
+the return type is AnonymousResourceCollection but I want the api docs to have a clickable reference to
+TicketResource so I used the @see property which doctum uses to add a "See also TicketResource" link to
+the docs. Same for TicketFilter
+
+While working on TicketController I found that doctum build cache is not working for methods and properties from
+the included trait or from the extended parent. I have to delete the cache and build directories if I make changes
+in one of those files before regenerating the docs. This may be a known issue. I haven't researched yet. But
+The scripts that laravel uses to generate theirs does do a clean up process to delete these directories both before
+and after.
+
+I fixed the parts where Scribe pointed out to us flaws in our rules. I do like this part about Scribe.
+However, in doctum the rules don't show because it is purely documenting the API and not trying to 
+generate both usage and API docs all together. In other words I feel strongly that there are 2 things I should
+not be including in a pure API documentation. Those are implementation details and business logic.
+Some small helpful hints are OK. But I think at most I should use @see to display a link to the docs page 
+where I render my markdown docs like Laravel does. 
+
+In the end I guess it comes down to the project and the type of docs you want to generate. I'm a fan
+of separate doctum and markdown for now.
+
+TODO: View laravel framework source for docblock examples, update all docblocks in this project
+TODO: Write markdown docs and display them at '/docs.
+TODO: Change api docs route from 'docs' to '/docs/api'
+TODO: Use Pest to write tests

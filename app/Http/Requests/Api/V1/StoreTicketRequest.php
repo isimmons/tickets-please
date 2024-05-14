@@ -4,7 +4,9 @@ namespace App\Http\Requests\Api\V1;
 
 use App\Permissions\V1\Abilities;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
+
 
 class StoreTicketRequest extends BaseTicketRequest
 {
@@ -23,18 +25,26 @@ class StoreTicketRequest extends BaseTicketRequest
      */
     public function rules(): array
     {
-        $authorIdAttr = $this->routeIs('tickets.store') ? 'data.relationships.author.data.id' : 'author';
-        $user = $this->user();
+        $isTicketsController = $this->routeIs('tickets.store');
+        $authorIdAttr = $isTicketsController ? 'data.relationships.author.data.id' : 'author';
+        $user = Auth::user();
         $authorIdRule = ['required', 'integer', 'numeric', 'min:1', 'exists:users,id'];
 
         $rules = [
+            'data' => ['required', 'array'],
+            'data.attributes' => ['required', 'array'],
             'data.attributes.title' => ['required', 'string'],
             'data.attributes.description' => ['required', 'string'],
             'data.attributes.status' => ['required', 'string', 'in:A,C,H,X'],
-            $authorIdAttr => [...$authorIdRule, Rule::in([$user->id])],
         ];
 
-        $user = $this->user();
+        if($isTicketsController) {
+            $rules['data.relationships'] = ['required', 'array'];
+            $rules['data.relationships.author'] = ['required', 'array'];
+            $rules['data.relationships.data'] = ['required', 'array'];
+        }
+
+        $rules[$authorIdAttr] = [...$authorIdRule, Rule::in([$user->id])];
 
         if( $user->tokenCan(Abilities::CreateTicket) ) {
             $rules[$authorIdAttr] = $authorIdRule;

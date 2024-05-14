@@ -8,12 +8,13 @@ trait ApiResponses {
 
     /**
      * Returns a successful JsonResponse with message and 200 status code
+     *
      * @param String $message
      * @param array $data
-     * @param Int $statusCode
+     * @param int $statusCode
      * @return JsonResponse
      */
-    protected function successResponse(String $message, array $data = [], Int $statusCode = 200): JsonResponse
+    protected function successResponse(String $message, array $data = [], int $statusCode = 200): JsonResponse
     {
         return response()->json([
             'data' => $data,
@@ -24,11 +25,12 @@ trait ApiResponses {
 
     /**
      * Returns an error JsonResponse with message and status code
+     *
      * @param array|string $errors
-     * @param Int|null $statusCode
+     * @param int|null $statusCode
      * @return JsonResponse
      */
-    protected function errorResponse(array|string $errors = [], Int $statusCode = null): JsonResponse
+    protected function errorResponse(array|string $errors = [], int $statusCode = null): JsonResponse
     {
         if(is_string($errors)) {
             return response()->json([
@@ -42,6 +44,12 @@ trait ApiResponses {
         ]);
     }
 
+    /**
+     * Returns an unauthorized 403 JsonResponse
+     *
+     * @param String $message
+     * @return JsonResponse
+     */
     protected function notAuthorized(String $message = 'Not Authorized'): JsonResponse
     {
         return $this->errorResponse([
